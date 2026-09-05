@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DGWF Governance-Mapping · Live v4</title>
+<style>
+:root{
+  --a:#314e5b;--bg:#f5f6f3;--line:#d9dde3;--mut:#667085;
+  --g:#bfe7c5;--y:#f7e7a5;--r:#f3b7b7;--soft:#eef3f4;--soft2:#f8f9f8
+}
+*{box-sizing:border-box}
+body{margin:0;font:14px Arial,sans-serif;background:var(--bg);color:#1f2933}
+.wrap{max-width:1100px;margin:auto;padding:14px}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:4}
+h1{font-size:21px;margin:0 0 3px}.sub,.help,.small{color:var(--mut)}.small{font-size:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px;margin:12px 0}
+button,input{font:inherit}
+button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px;cursor:pointer}
+button.active,.primary,.chip.on,.ref.on{background:var(--a);color:#fff;border-color:var(--a)}
+input{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px}
+.hidden{display:none}
+.nav{display:flex;gap:7px;flex-wrap:wrap}
+.case{background:#e9eff1;border-left:4px solid var(--a);padding:11px;border-radius:8px;margin:10px 0 13px}
+.grpbox{border:1px solid var(--line);border-radius:13px;padding:10px 11px;margin:10px 0;background:var(--soft2)}
+.gname{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--a);margin-bottom:7px;letter-spacing:.03em}
+.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.chip{text-align:left;min-height:42px}
+.count{display:inline-block;background:#e9eff1;color:var(--a);padding:4px 8px;border-radius:99px;font-size:12px;font-weight:700;margin-top:7px}
+.add{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:7px}
+.pgrp{border:1px solid var(--line);border-radius:13px;padding:10px 11px;margin:12px 0;background:var(--soft2)}
+.pgrp h3{font-size:13px;text-transform:uppercase;letter-spacing:.03em;color:var(--a);margin:0 0 9px}
+.prow{border:1px solid var(--line);border-radius:11px;padding:9px;margin:6px 0;background:#fff}
+.plab{font-weight:700;margin-bottom:7px}
+.refs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.ref{text-align:center;font-size:12px;min-height:39px}
+@media(max-width:600px){.refs{grid-template-columns:repeat(2,1fr)}}
+.diag{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.diag button{font-size:12px;min-height:43px}
+.diag .green.on{background:var(--g)}.diag .yellow.on{background:var(--y)}.diag .red.on{background:var(--r)}
+@media(max-width:600px){.diag{grid-template-columns:1fr}}
+.actions{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:12px}
+.finish{padding:11px 16px;font-weight:700}
+.done{background:#edf5ef;border:1px solid #c7decf;border-radius:12px;padding:13px;margin-top:12px}
+table{border-collapse:collapse;width:100%;min-width:980px;font-size:12px}
+th,td{border:1px solid var(--line);padding:8px;text-align:center;background:#fff;vertical-align:middle} th{line-height:1.2} td:first-child{min-width:250px}
+th:first-child,td:first-child{text-align:left}
+.matrix{overflow-x:auto;margin-top:9px}
+.group td{background:#e9eff1;color:var(--a);font-weight:700;text-transform:uppercase;text-align:left}
+.heat{font-weight:700}
+.bar{height:24px;display:flex;background:#eef1f2;border-radius:7px;overflow:hidden}
+.seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.sg{background:var(--g)}.sy{background:var(--y)}.sr{background:var(--r)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0}
+.legend span{font-size:12px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px}
+.dg{background:#55a866}.dy{background:#b99619}.dr{background:#b84d4d}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.livekpis{grid-template-columns:repeat(4,1fr)}@media(max-width:720px){.livekpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}
+.kpi b{font-size:21px;display:block}
+.modframe{border:1px solid var(--line);border-radius:13px;padding:11px;margin:11px 0;background:#fff}
+.modframe h3{margin:0 0 8px;color:var(--a);font-size:14px}
+.modrow{display:grid;grid-template-columns:minmax(180px,1.2fr) 55px 2.2fr;gap:10px;align-items:center;padding:8px 0;border-top:1px solid #eef0f1}
+.modrow:first-of-type{border-top:0}
+@media(max-width:720px){.modrow{grid-template-columns:1fr}.modrow .n{text-align:left}}
+.n{text-align:center;font-weight:700}
+.refchips{display:flex;gap:6px;flex-wrap:wrap}
+.rchip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:5px 8px;background:var(--soft);font-size:12px}
+.rchip strong{color:var(--a)}
+.rchip.faint{background:#fff;color:var(--mut)}
+.toggleline{display:flex;justify-content:flex-end;margin-top:8px}
+.docnote{font-size:12px;color:var(--mut);margin:6px 0}
+
+.case-map{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--soft2)}
+.case-core{max-width:520px;margin:0 auto 14px;background:var(--a);color:#fff;border-radius:13px;padding:14px;text-align:center}
+.case-core b{display:block;font-size:16px;margin-bottom:5px}
+.actor-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media(max-width:760px){.actor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.actorbtn{min-height:46px;text-align:center;background:#fff}
+.actorbtn.on{background:var(--a);color:#fff;border-color:var(--a)}
+.case-pointe{margin-top:13px;padding:10px 12px;border-radius:10px;background:#e9eff1;color:var(--a);font-weight:700;text-align:center}
+
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>DGWF 2026 · Governance-Mapping</h1><div class="sub">Live-Mapping für den Workshop · Eingaben werden nach dem Start automatisch übertragen.</div><div class="row" style="margin-top:8px"><button id="tp" class="active">Teilnehmende</button><button id="tm">Moderation</button><span id="conn" style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:7px 10px;font-size:12px;background:#fff"><span id="connDot" style="width:9px;height:9px;border-radius:50%;background:#b5bbc0"></span><span id="connText">nicht verbunden</span></span></div></div></header>
+<main class="wrap">
+<section id="part">
+<div class="panel grid2"><div><div class="small">Sitzungscode</div><input id="code" value="DGWF2026"></div><div><div class="small">Kürzel (optional)</div><input id="name" placeholder="z. B. Hochschule oder Kürzel"></div><div class="row"><button id="join" class="primary">Teilnahme starten</button><button id="newp">Neue Eingabe</button></div><div class="small">Die Abfrage ist anonym; ein Kürzel ist optional. Nach dem Start werden Änderungen automatisch gespeichert.</div></div>
+<div class="panel nav"><button id="n1" class="active">1 · Organisationsfragen</button><button id="n2">2 · Bezugsräume</button><button id="n3">3 · Governance-Diagnose</button></div>
+<section id="r1" class="panel"></section><section id="r2" class="panel hidden"></section><section id="r3" class="panel hidden"></section>
+</section>
+
+<section id="mod" class="hidden">
+<div class="panel grid2"><div><div class="small">Sitzungscode</div><input id="mcode" value="DGWF2026"><div class="small" style="margin-top:6px">Teilnehmenden-Link: gleiche Seite mit <b>?session=CODE</b> · Moderation: <b>?session=CODE&amp;mode=moderation</b></div></div><div class="row" style="align-items:end"><button id="open" class="primary">Live-Auswertung öffnen</button><button id="clearSession">Sitzung leeren</button></div></div>
+<div class="panel"><div class="kpis livekpis"><div class="kpi"><b id="kp">0</b>Teilnehmende</div><div class="kpi"><b id="kdone">0</b>abgeschlossen</div><div class="kpi"><b id="kq">0</b>ausgewählte Punkte</div><div class="kpi"><b id="kr">0</b>Zuordnungen</div></div></div>
+<div class="panel">
+<div class="nav">
+  <button id="a0" class="active">1A · Unser Fall</button>
+  <button id="a1">1 · Organisationsfragen</button>
+  <button id="a2">2 · Bezugsräume</button>
+  <button id="a3">3 · Governance-Diagnose</button>
+</div>
+<div id="m0"></div>
+<div id="m1" class="hidden"></div>
+<div id="m2" class="hidden"></div>
+<div id="m3" class="hidden"></div>
+</div>
+</section>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+
+/*
+  Firebase-Projekt der bisherigen DGWF-App.
+  Die Realtime-Database-URL wird automatisch für die üblichen Default-URLs gesucht.
+  Falls Ihr Projekt eine andere Datenbank-URL verwendet, tragen Sie sie bei DATABASE_URL ein.
+*/
+const firebaseConfig = {
+  apiKey: "AIzaSyAPtK7k2D8Vqjd9t0pXWV7lfNFA9EgJWE8",
+  authDomain: "dgwf-2026.firebaseapp.com",
+  projectId: "dgwf-2026",
+  storageBucket: "dgwf-2026.firebasestorage.app",
+  messagingSenderId: "722105752733",
+  appId: "1:722105752733:web:fd9380f9277b2e871c8874"
+};
+
+const DATABASE_URL = ""; // optional: exakte Realtime-Database-URL eintragen
+const app = initializeApp(firebaseConfig);
+let db = null;
+let resolvedDatabaseURL = "";
+
+async function resolveDatabaseURL(){
+  if(resolvedDatabaseURL) return resolvedDatabaseURL;
+  const p=firebaseConfig.projectId;
+  const candidates=[
+    DATABASE_URL,
+    `https://${p}-default-rtdb.europe-west1.firebasedatabase.app`,
+    `https://${p}-default-rtdb.firebaseio.com`
+  ].filter(Boolean);
+  for(const url of candidates){
+    try{
+      const r=await fetch(url.replace(/\/$/,"")+"/.json?shallow=true",{method:"GET",cache:"no-store"});
+      if(r.status!==404){resolvedDatabaseURL=url;return url;}
+    }catch(e){}
+  }
+  throw new Error("Realtime Database nicht gefunden. Bitte DATABASE_URL im HTML eintragen.");
+}
+async function ensureDb(){
+  if(db) return db;
+  const url=await resolveDatabaseURL();
+  db=getDatabase(app,url);
+  return db;
+}
+
+function setConnection(ok, label){
+  document.getElementById("connDot").style.background = ok ? "#47a15d" : "#b5bbc0";
+  document.getElementById("connText").textContent = label || (ok ? "live verbunden" : "nicht verbunden");
+}
+
+const ACTORS=[
+["fak","Fakultäten"],
+["pruef","Prüfungsamt"],
+["service","Studienservice"],
+["zww","ZWW / Weiterbildungseinrichtung"],
+["just","Justiziariat"],
+["haushalt","Haushalt / Finanzen"],
+["leitung","Hochschulleitung / Kanzler"],
+["vpl","Vizepräsident:in Studium und Lehre"],
+["personal","Personal / Lehrorganisation"],
+["qm","Qualitätsmanagement"],
+["dritt","Drittmittelverwaltung"],
+["it","IT / Lernplattformen"]
+];
+let storyActors={};
+ACTORS.forEach(a=>storyActors[a[0]]=false);
+
+const P=[
+["Studium",[["zugang","Zulassung / Zugang"],["status","Status"],["ects","Prüfungen / ECTS"],["abschl","Microcredentials / Abschlüsse"]]],
+["Lehre & Organisation",[["module","Zielgruppenübergreifende Nutzung von Modulen"],["aner","Anrechnung / Anerkennung"],["qual","Qualitätssicherung"],["beratung","Bereichsübergreifende Beratung"]]],
+["Finanzierung & Recht",[["fin","Kalkulation / Finanzierung"],["geb","Gebühren / Rechnungsstellung"],["hon","Lehrauftrag / Honorar / Lehrdeputat"],["beih","Beihilferechtliche Einordnung"]]]
+];
+const R=[["f","Forschung / Wissenschaft"],["l","Studium & Lehre"],["g","Hochschulgovernance"],["a","Arbeitswelt / Berufspraxis"],["s","Gesellschaft / Region"],["m","Weiterbildungsmarkt"]];
+let pid = localStorage.getItem("dgwf_live_pid") || id();
+localStorage.setItem("dgwf_live_pid", pid);
+let sc="", mc="", S=fresh(), moderatorUnsub=null, storyUnsub=null;
+
+function id(){return crypto.randomUUID?crypto.randomUUID():Date.now()+Math.random()+""}
+function fresh(){let s={p:{},ref:{},d:{},cp:[],done:false};P.forEach(g=>g[1].forEach(x=>{s.p[x[0]]=false;s.ref[x[0]]={};R.forEach(r=>s.ref[x[0]][r[0]]=false);s.d[x[0]]=""}));return s}
+function normalizeState(v){
+  const s=fresh();
+  if(!v) return s;
+  s.cp=Array.isArray(v.cp)?v.cp:[];
+  s.cp.forEach(x=>{if(x&&x[0]){if(s.p[x[0]]===undefined)s.p[x[0]]=false;if(!s.ref[x[0]]){s.ref[x[0]]={};R.forEach(r=>s.ref[x[0]][r[0]]=false)}if(s.d[x[0]]===undefined)s.d[x[0]]=""}});
+  Object.assign(s.p,v.p||{});
+  Object.entries(v.ref||{}).forEach(([k,rv])=>{if(!s.ref[k]){s.ref[k]={};R.forEach(r=>s.ref[k][r[0]]=false)};Object.assign(s.ref[k],rv||{})});
+  Object.assign(s.d,v.d||{});
+  s.done=!!v.done;
+  return s;
+}
+function safe(x){return(x||"").trim().toUpperCase().replace(/[^A-Z0-9_-]/g,"").slice(0,12)}
+function esc(x){return String(x??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
+function slug(x){return"x_"+x.toLowerCase().replace(/[^a-z0-9äöüß]+/g,"-")+"_"+Math.random().toString(36).slice(2,5)}
+function ensure(x){if(S.p[x]===undefined)S.p[x]=true;if(!S.ref[x]){S.ref[x]={};R.forEach(r=>S.ref[x][r[0]]=false)}if(S.d[x]===undefined)S.d[x]=""}
+function payload(){return{
+  name:document.getElementById("name").value||"anonym",
+  p:S.p, ref:S.ref, d:S.d, cp:S.cp, done:S.done,
+  updatedAt:Date.now()
+}}
+
+async function save(){
+  if(!sc)return;
+  try{
+    const dbase=await ensureDb();
+    await set(ref(dbase,`sessions/${sc}/participants/${pid}`), payload());
+    setConnection(true,"live verbunden");
+  }catch(e){
+    console.error(e);
+    setConnection(false,"Übertragung fehlgeschlagen");
+  }
+}
+function ch(x,l,on){return`<button class="chip ${on?"on":""}" data-id="${x}">${esc(l)}</button>`}
+
+function render1(){
+let e=document.getElementById("r1");
+e.innerHTML=`<h2 style="margin:0">1 · Organisationsfragen</h2>
+<div class="help">Was muss in Ihrer Praxis geklärt oder organisiert werden? Denken Sie an konkrete Fälle wissenschaftlicher Weiterbildung an Ihrer Hochschule. Mehrfachauswahl möglich.</div>
+${P.map(g=>`<div class="grpbox"><div class="gname">${g[0]}</div><div class="chips">${g[1].map(x=>ch(x[0],x[1],S.p[x[0]])).join("")}</div></div>`).join("")}
+${S.cp.length?`<div class="grpbox"><div class="gname">Ergänzungen</div><div class="chips">${S.cp.map(x=>ch(x[0],x[1],S.p[x[0]])).join("")}</div></div>`:""}
+<div class="add"><input id="ip" placeholder="weiteren Punkt ergänzen"><button id="bp">+ ergänzen</button></div>
+<span class="count">${Object.values(S.p).filter(Boolean).length} Punkte ausgewählt</span>
+<div class="actions"><span class="small">Bearbeitungszeit: ca. 3–5 Minuten</span><button id="next2" class="primary">Weiter zu Bezugsräumen →</button></div>`;
+e.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{S.p[b.dataset.id]=!S.p[b.dataset.id];S.done=false;render1();render2();render3();save()});
+document.getElementById("bp").onclick=()=>{let v=document.getElementById("ip").value.trim();if(!v)return;let x=slug(v);S.cp.push([x,v]);ensure(x);S.p[x]=true;render1();render2();render3();save()};
+document.getElementById("next2").onclick=()=>{if(!Object.values(S.p).some(Boolean)){alert("Bitte mindestens einen Punkt auswählen.");return;}show(2)}
+}
+function selGroups(){let g=P.map(x=>[x[0],x[1].filter(y=>S.p[y[0]])]).filter(x=>x[1].length);let ex=S.cp.filter(x=>S.p[x[0]]);if(ex.length)g.push(["Ergänzungen",ex]);return g}
+function render2(){let e=document.getElementById("r2"),g=selGroups();e.innerHTML=`<h2 style="margin:0">2 · Bezugsräume</h2><div class="help"><b>Welche Bezugsräume berührt der jeweilige Punkt?</b> Mehrfachauswahl möglich.</div>${g.length?g.map(x=>`<div class="pgrp"><h3>${x[0]}</h3>${x[1].map(y=>rowR(y)).join("")}</div>`).join(""):'<div class="panel">Bitte zunächst in Runde 1 Fragen auswählen.</div>'}<div class="actions"><button id="back1">← Organisationsfragen</button><button id="next3" class="primary">Weiter zur Governance-Diagnose →</button></div>`;
+e.querySelectorAll(".ref").forEach(b=>b.onclick=()=>{ensure(b.dataset.p);S.ref[b.dataset.p][b.dataset.r]=!S.ref[b.dataset.p][b.dataset.r];S.done=false;render2();save()});document.getElementById("back1").onclick=()=>show(1);document.getElementById("next3").onclick=()=>show(3)}
+function rowR(x){ensure(x[0]);return`<div class="prow"><div class="plab">${esc(x[1])}</div><div class="refs">${R.map(r=>`<button class="ref ${S.ref[x[0]][r[0]]?"on":""}" data-p="${x[0]}" data-r="${r[0]}">${r[1]}</button>`).join("")}</div></div>`}
+function render3(){let e=document.getElementById("r3"),g=selGroups();e.innerHTML=`<h2 style="margin:0">3 · Governance-Diagnose</h2><div class="help"><b>Wie tief greift der Veränderungsbedarf jeweils an Ihrer Hochschule?</b></div><div class="legend"><span><i class="dot dg"></i>bestehendes System</span><span><i class="dot dy"></i>Anpassung</span><span><i class="dot dr"></i>Strukturentscheidung</span></div>${g.length?g.map(x=>`<div class="pgrp"><h3>${x[0]}</h3>${x[1].map(y=>rowD(y)).join("")}</div>`).join(""):'<div class="panel">Bitte zunächst in Runde 1 Fragen auswählen.</div>'}${S.done?`<div class="done"><b>Vielen Dank. Ihre Einschätzungen sind erfasst.</b><br><span class="small">Wir schauen uns die Ergebnisse jetzt gemeinsam an.</span><div style="margin-top:8px"><button id="edit">Antwort bearbeiten</button></div></div>`:`<div class="actions"><button id="back2">← Bezugsräume</button><button id="finish" class="primary finish">Antwort abschließen</button></div>`}`;
+e.querySelectorAll(".diag button").forEach(b=>b.onclick=()=>{ensure(b.dataset.p);S.d[b.dataset.p]=b.dataset.v;S.done=false;render3();save()});
+if(document.getElementById("back2"))document.getElementById("back2").onclick=()=>show(2);
+if(document.getElementById("finish"))document.getElementById("finish").onclick=()=>{S.done=true;render3();save()};
+if(document.getElementById("edit"))document.getElementById("edit").onclick=()=>{S.done=false;render3();save()}
+}
+function rowD(x){let c=S.d[x[0]]||"";return`<div class="prow"><div class="plab">${esc(x[1])}</div><div class="diag"><button class="green ${c==="green"?"on":""}" data-p="${x[0]}" data-v="green">🟢 im bestehenden System lösbar</button><button class="yellow ${c==="yellow"?"on":""}" data-p="${x[0]}" data-v="yellow">🟡 Abstimmung / Anpassung erforderlich</button><button class="red ${c==="red"?"on":""}" data-p="${x[0]}" data-v="red">🔴 grundlegende strukturelle Entscheidung erforderlich</button></div></div>`}
+function show(n){[1,2,3].forEach(i=>{document.getElementById("r"+i).classList.toggle("hidden",i!==n);document.getElementById("n"+i).classList.toggle("active",i===n)});if(n===2)render2();if(n===3)render3()}
+function mode(m){document.getElementById("part").classList.toggle("hidden",m!=="p");document.getElementById("mod").classList.toggle("hidden",m!=="m");document.getElementById("tp").classList.toggle("active",m==="p");document.getElementById("tm").classList.toggle("active",m==="m")}
+function agshow(n){
+[0,1,2,3].forEach(i=>{
+  document.getElementById("m"+i).classList.toggle("hidden",i!==n);
+  document.getElementById("a"+i).classList.toggle("active",i===n)
+})
+}
+function renderStory(){
+let e=document.getElementById("m0");
+e.innerHTML=`
+<h3 style="margin-bottom:3px">1A · Unser Fall: Wer wurde beteiligt?</h3>
+<div class="help">Moderationsansicht. Klicken Sie die Bereiche während der Fallgeschichte nach und nach an.</div>
+<div class="case-map">
+  <div class="case-core">
+    <b>Unser Ausgangspunkt</b>
+    Ein Studiengangsmodul soll für Teilnehmende der wissenschaftlichen Weiterbildung geöffnet werden.
+  </div>
+  <div class="actor-grid">
+    ${ACTORS.map(a=>`<button class="actorbtn ${storyActors[a[0]]?"on":""}" data-actor="${a[0]}">${a[1]}</button>`).join("")}
+  </div>
+  <div class="row" style="margin-top:10px">
+    <button id="storyReset">Alle zurücksetzen</button>
+  </div>
+  <div class="case-pointe">Eine Öffnungsentscheidung aktiviert ein Organisationsnetzwerk.</div>
+</div>
+<div class="help" style="margin-top:10px"><b>Übergang:</b> „Das war unsere Geschichte. Was muss in Ihrer Praxis geklärt oder organisiert werden?“</div>`;
+e.querySelectorAll(".actorbtn").forEach(b=>b.onclick=async()=>{
+  storyActors[b.dataset.actor]=!storyActors[b.dataset.actor];
+  renderStory();
+  if(mc){try{const dbase=await ensureDb();await set(ref(dbase,`sessions/${mc}/storyActors`),storyActors)}catch(err){console.error(err)}}
+});
+document.getElementById("storyReset").onclick=async()=>{
+  ACTORS.forEach(a=>storyActors[a[0]]=false);
+  renderStory();
+  if(mc){try{const dbase=await ensureDb();await set(ref(dbase,`sessions/${mc}/storyActors`),storyActors)}catch(err){console.error(err)}}
+};
+}
+
+function labels(people){let x={};P.forEach(g=>g[1].forEach(y=>x[y[0]]=y[1]));people.forEach(p=>(p.cp||[]).forEach(y=>x[y[0]]=y[1]));return x}
+function groups(people,onlySelected=false){
+  let l=labels(people),known=new Set(P.flatMap(g=>g[1].map(x=>x[0]))),ex=[];
+  people.forEach(p=>Object.entries(p.p||{}).forEach(([k,v])=>{if(v&&!known.has(k)&&!ex.includes(k))ex.push(k)}));
+  let g=P.map(x=>[x[0],x[1].map(y=>[y[0],l[y[0]]])]);
+  if(ex.length)g.push(["Ergänzungen",ex.map(k=>[k,l[k]||k])]);
+  if(onlySelected)g=g.map(x=>[x[0],x[1].filter(y=>nsel(people,y[0])>0)]).filter(x=>x[1].length);
+  return g;
+}
+function nsel(people,x){return people.filter(p=>p.p?.[x]).length}
+function aggregate(obj){let people=Object.values(obj||{});document.getElementById("kp").textContent=people.length;document.getElementById("kdone").textContent=people.filter(p=>p.done).length;document.getElementById("kq").textContent=people.reduce((s,p)=>s+Object.values(p.p||{}).filter(Boolean).length,0);document.getElementById("kr").textContent=people.reduce((s,p)=>s+Object.values(p.ref||{}).reduce((a,r)=>a+Object.values(r||{}).filter(Boolean).length,0),0);mod1(people);mod2(people);mod3(people)}
+function mod1(people){let c={};people.forEach(p=>Object.entries(p.p||{}).forEach(([k,v])=>{if(v)c[k]=(c[k]||0)+1}));document.getElementById("m1").innerHTML=`<h3>Was muss in der Gruppe geklärt oder organisiert werden?</h3>${groups(people).map(g=>`<div class="modframe"><h3>${g[0]}</h3><div class="chips">${g[1].map(x=>`<div class="chip"><b>${esc(x[1])}</b><br><span class="small">${c[x[0]]||0} / ${people.length}</span></div>`).join("")}</div></div>`).join("")}`}
+function mod2(people){
+let body=groups(people,true).map(g=>
+  `<tr class="group"><td colspan="8">${g[0]}</td></tr>`+
+  g[1].map(x=>{
+    let n=nsel(people,x[0]);
+    return `<tr>
+      <td>${esc(x[1])}</td>
+      <td><b>${n||"–"}</b></td>
+      ${R.map(r=>{
+        let q=people.filter(p=>p.p?.[x[0]]&&p.ref?.[x[0]]?.[r[0]]).length;
+        let pct=n?Math.round(q/n*100):0;
+        let alpha=n?(0.04+0.68*(pct/100)):0;
+        let color=pct>=72?"#fff":"#1f2933";
+        return `<td class="heat" style="background:rgba(49,78,91,${alpha});color:${color}">${n?pct+"%":"–"}</td>`;
+      }).join("")}
+    </tr>`;
+  }).join("")
+).join("");
+
+document.getElementById("m2").innerHTML=`
+<h3>Bezugsräume der identifizierten Punkte</h3>
+<div class="help">Alle sechs Bezugsräume im Vergleich · Mehrfachzuordnungen möglich · Prozentanteil bezogen auf das jeweilige n</div>
+<div class="matrix">
+<table>
+<tr><th>Punkt</th><th>n</th>${R.map(r=>`<th>${r[1]}</th>`).join("")}</tr>
+${body||`<tr><td colspan="8" class="small">Noch keine Punkte ausgewählt.</td></tr>`}
+</table>
+</div>`;
+}
+
+function mod3(people){
+let body=groups(people,true).map(g=>`<tr class="group"><td colspan="3">${g[0]}</td></tr>`+g[1].map(x=>{let n=nsel(people,x[0]),v=people.filter(p=>p.p?.[x[0]]).map(p=>p.d?.[x[0]]).filter(Boolean),m=v.length,pct=t=>m?Math.round(v.filter(z=>z===t).length/m*100):0,pg=pct("green"),py=pct("yellow"),pr=pct("red");let bar=m?`<div class="bar">${pg?`<div class="seg sg" style="width:${pg}%">${pg}%</div>`:""}${py?`<div class="seg sy" style="width:${py}%">${py}%</div>`:""}${pr?`<div class="seg sr" style="width:${pr}%">${pr}%</div>`:""}</div>`:'<span class="small">noch keine Bewertung</span>';return`<tr><td>${esc(x[1])}</td><td><b>${n||"–"}</b>${n&&m<n?`<div class="small">bewertet ${m}/${n}</div>`:""}</td><td>${bar}</td></tr>`}).join("")).join("");
+document.getElementById("m3").innerHTML=`<h3>Governance-Diagnose</h3><div class="help">Struktur entsprechend Runde 1 · Prozentanteile bezogen auf die abgegebenen Bewertungen</div><div class="legend"><span><i class="dot dg"></i>bestehendes System</span><span><i class="dot dy"></i>Anpassung</span><span><i class="dot dr"></i>Strukturentscheidung</span></div><div class="matrix"><table><tr><th>Punkt</th><th>n</th><th>Governance-Diagnose</th></tr>${body||`<tr><td colspan="3" class="small">Noch keine Bewertungen vorhanden.</td></tr>`}</table></div>`
+}
+function demo(){let mk=(procs,refs,d)=>{let s=fresh();procs.forEach(x=>s.p[x]=true);Object.entries(refs).forEach(([x,rs])=>rs.forEach(r=>s.ref[x][r]=true));Object.assign(s.d,d);s.done=true;return{name:"Demo",...s}};return{
+d1:mk(["status","ects","module","fin","beih"],{status:["g","a","l"],ects:["l","g"],module:["l","a","s"],fin:["g","m"],beih:["g","m"]},{status:"red",ects:"yellow",module:"yellow",fin:"red",beih:"red"}),
+d2:mk(["zugang","status","ects","aner","qual"],{zugang:["g","a","s"],status:["g","a"],ects:["l","g"],aner:["l","g"],qual:["l","g","f"]},{zugang:"yellow",status:"red",ects:"green",aner:"yellow",qual:"green"}),
+d3:mk(["abschl","module","beratung","fin","geb"],{abschl:["l","g","a","m"],module:["l","a","s"],beratung:["g","a","s"],fin:["g","m"],geb:["m","g"]},{abschl:"yellow",module:"yellow",beratung:"yellow",fin:"red",geb:"yellow"}),
+d4:mk(["ects","module","aner","hon","beih"],{ects:["l"],module:["l","a"],aner:["l","g"],hon:["g","m"],beih:["g","m"]},{ects:"green",module:"yellow",aner:"yellow",hon:"red",beih:"red"}),
+d5:mk(["zugang","abschl","qual","beratung","fin"],{zugang:["a","s","g"],abschl:["l","a","s"],qual:["l","f"],beratung:["a","s","g"],fin:["m","g","a"]},{zugang:"yellow",abschl:"yellow",qual:"green",beratung:"yellow",fin:"red"})
+}}
+document.getElementById("tp").onclick=()=>mode("p");
+document.getElementById("tm").onclick=()=>mode("m");
+[1,2,3].forEach(i=>document.getElementById("n"+i).onclick=()=>show(i));
+[0,1,2,3].forEach(i=>document.getElementById("a"+i).onclick=()=>agshow(i));
+
+document.getElementById("join").onclick=async()=>{
+  sc=safe(document.getElementById("code").value);
+  if(!sc){alert("Bitte Sitzungscode eingeben.");return;}
+  document.getElementById("code").value=sc;
+  try{
+    const dbase=await ensureDb();
+    const snap=await get(ref(dbase,`sessions/${sc}/participants/${pid}`));
+    if(snap.exists()){
+      const v=snap.val();
+      S=normalizeState(v);
+      if(v.name&&v.name!=="anonym")document.getElementById("name").value=v.name;
+      render1();render2();render3();
+    }else{
+      await save();
+    }
+    setConnection(true,"live verbunden");
+  }catch(e){console.error(e);setConnection(false,"Verbindung fehlgeschlagen");alert(e.message||"Die Live-Verbindung konnte nicht hergestellt werden.")}
+};
+
+document.getElementById("newp").onclick=()=>{
+  sc=safe(document.getElementById("code").value)||sc;
+  pid=id();
+  localStorage.setItem("dgwf_live_pid",pid);
+  S=fresh();
+  document.getElementById("name").value="";
+  setConnection(!!sc,sc?"bereit für neue Eingabe":"nicht verbunden");
+  render1();render2();render3();
+  show(1);
+};
+
+document.getElementById("open").onclick=async()=>{
+  mc=safe(document.getElementById("mcode").value);
+  if(!mc){alert("Bitte Sitzungscode eingeben.");return;}
+  document.getElementById("mcode").value=mc;
+  try{
+    const dbase=await ensureDb();
+    if(moderatorUnsub) moderatorUnsub();
+    if(storyUnsub) storyUnsub();
+    moderatorUnsub=onValue(ref(dbase,`sessions/${mc}/participants`),(snap)=>{
+      aggregate(snap.val()||{});
+      setConnection(true,"Moderation live");
+    },(err)=>{console.error(err);setConnection(false,"Live-Auswertung fehlgeschlagen")});
+    storyUnsub=onValue(ref(dbase,`sessions/${mc}/storyActors`),(snap)=>{
+      const v=snap.val();
+      if(v){ACTORS.forEach(a=>storyActors[a[0]]=!!v[a[0]])}else{ACTORS.forEach(a=>storyActors[a[0]]=false)}
+      renderStory();
+    });
+  }catch(e){console.error(e);setConnection(false,"Verbindung fehlgeschlagen");alert(e.message||"Die Live-Auswertung konnte nicht geöffnet werden.")}
+};
+
+document.getElementById("clearSession").onclick=async()=>{
+  mc=safe(document.getElementById("mcode").value)||mc;
+  if(!mc){alert("Bitte Sitzungscode eingeben.");return;}
+  if(!confirm(`Sitzung ${mc} wirklich leeren? Alle Teilnehmenden-Antworten werden gelöscht.`))return;
+  try{
+    const dbase=await ensureDb();
+    await remove(ref(dbase,`sessions/${mc}/participants`));
+    await remove(ref(dbase,`sessions/${mc}/storyActors`));
+    ACTORS.forEach(a=>storyActors[a[0]]=false);renderStory();aggregate({});
+  }catch(e){console.error(e);alert("Sitzung konnte nicht geleert werden.")}
+};
+
+const params=new URLSearchParams(location.search);
+const qSession=safe(params.get("session")||"");
+const qMode=(params.get("mode")||"").toLowerCase();
+if(qSession){document.getElementById("code").value=qSession;document.getElementById("mcode").value=qSession;}
+render1();render2();render3();renderStory();aggregate({});agshow(0);setConnection(false,"nicht verbunden");
+if(qMode==="moderation"){
+  mode("m");
+  if(qSession)setTimeout(()=>document.getElementById("open").click(),0);
+}else{mode("p");}
+</script>
+</body></html>
